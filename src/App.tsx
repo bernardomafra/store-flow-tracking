@@ -1,4 +1,6 @@
-import React from 'react';
+import { io } from 'socket.io-client';
+
+import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
@@ -12,6 +14,14 @@ interface ProductFormElements extends HTMLFormControlsCollection {
 interface ProductForm extends HTMLFormElement {
   readonly elements: ProductFormElements;
 }
+
+const ioClient = io('http://localhost:3030', {
+  query: {
+    user: '1234',
+  },
+});
+ioClient.on('teste', (msg) => console.info(msg));
+ioClient.on('ws_sfa::STEP', (stepMsg) => console.log('STEP: ', stepMsg));
 
 function App() {
   const [product, setProduct] = useChromeSyncStorage<string>('product', '');
