@@ -18,10 +18,9 @@ export default function WebsitesList() {
   }, [deleteFile, setWebsites]);
 
   const getWebsitesArrayFromText = () => {
-    if (isFileTextContentValid(fileTextContent)) {
-      const wbs = getFileTextContentArray(fileTextContent);
-      setWebsites(wbs);
-    } else if (!websites) handleFileDelete();
+    if (isFileTextContentValid(fileTextContent))
+      setWebsites(getFileTextContentArray(fileTextContent));
+    else if (!websites) handleFileDelete();
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
