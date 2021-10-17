@@ -21,6 +21,7 @@ const FileProvider: React.FC = ({ children }) => {
   const [uploadedFile, setUploadedFile] = useState<IFile | null>(null);
   const [text, setText] = useState<string>('');
 
+  console.log('FileProvider::rendered');
   useEffect(() => {
     return () => {
       uploadedFile && URL.revokeObjectURL(uploadedFile.preview);
