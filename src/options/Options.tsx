@@ -3,13 +3,14 @@ import { Container, Content } from '../styles';
 
 import { FileProvider } from '../context/files';
 import WebsitesList from '../components/WebsitesList';
+import Upload from '../components/Upload';
 
 function Options() {
   return (
     <FileProvider>
       <Container>
         <Content>
-          <WebsitesList />
+          <WebsitesList fallbackComponent={<Upload />} />
         </Content>
         <GlobalStyle />
       </Container>

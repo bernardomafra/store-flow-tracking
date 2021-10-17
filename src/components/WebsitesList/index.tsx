@@ -3,9 +3,11 @@ import { useFiles } from '../../context/files';
 import { useChromeSyncStorage } from '../../hooks/useChromeSyncStorage';
 import { getFileTextContentArray, isFileTextContentValid } from './utils';
 
-import Upload from '../Upload';
+interface WebsitesListProps {
+  fallbackComponent: React.ReactElement;
+}
 
-export default function WebsitesList() {
+export default function WebsitesList(props: WebsitesListProps) {
   const { fileTextContent, deleteFile } = useFiles();
   const [websites, setWebsites] = useChromeSyncStorage<string[]>(
     'websites',
@@ -26,7 +28,10 @@ export default function WebsitesList() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => getWebsitesArrayFromText(), [fileTextContent]);
 
-  return websites?.length ? (
+  if (!websites?.length)
+    return props.fallbackComponent || <i>Nenhum website cadastrado</i>;
+
+  return (
     <>
       {websites.map((website) => (
         <React.Fragment key={website}>
@@ -38,7 +43,5 @@ export default function WebsitesList() {
       ))}
       <button onClick={handleFileDelete}>delete</button>
     </>
-  ) : (
-    <Upload />
   );
 }
