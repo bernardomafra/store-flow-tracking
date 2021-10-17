@@ -38,3 +38,30 @@ a {
     transform: rotate(360deg);
   }
 }
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0px;
+}
+
+form input {
+  border-radius: 4px;
+  padding: 10px;
+}
+
+form input,
+section#product,
+b {
+  margin-top: 10px;
+}
+
+section#product {
+  display: flex;
+  flex-direction: column;
+}
+
+section#product b {
+  text-transform: uppercase;
+}
