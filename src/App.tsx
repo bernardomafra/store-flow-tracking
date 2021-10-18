@@ -1,5 +1,3 @@
-import { io } from 'socket.io-client';
-
 import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
@@ -15,14 +13,6 @@ interface ProductForm extends HTMLFormElement {
   readonly elements: ProductFormElements;
 }
 
-const ioClient = io('http://localhost:3030', {
-  query: {
-    user: '1234',
-  },
-});
-ioClient.on('teste', (msg) => console.info(msg));
-ioClient.on('ws_sfa::STEP', (stepMsg) => console.log('STEP: ', stepMsg));
-
 function App() {
   const [product, setProduct] = useChromeSyncStorage<string>('product', '');
 
@@ -31,6 +21,17 @@ function App() {
     e.stopPropagation();
     setProduct(e.currentTarget.elements.product.value || '');
   }
+
+  chrome.runtime.onMessage.addListener(function (
+    request,
+    sender,
+    sendResponse,
+  ) {
+    if (request.msg === 'socket') {
+      //  To do something
+      console.log('data received: ', request.data);
+    }
+  });
 
   return (
     <div className="App">

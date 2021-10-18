@@ -2,14 +2,15 @@
   "manifest_version": 2,
   "version": "0.0.1",
   "short_name": "React App",
-  "name": "Create React App Sample",
+  "name": "Store Flow Tracking",
   "description": "Sample application showing how to create an extension with Create React App",
   "browser_action": {
-    "default_title": "CRE",
+    "default_title": "Smart Flow Tracking",
     "default_popup": "popup.html"
   },
   "background": {
-    "scripts": ["background.bundle.js"]
+    "scripts": ["socket.io.js", "background.bundle.js"],
+    "persistent": false
   },
   "content_scripts": [
     {
@@ -18,11 +19,13 @@
     }
   ],
   "icons": {
-    "16": "img/icon-16.png",
-    "48": "img/icon-48.png",
-    "128": "img/icon-128.png"
+    "16": "rocket.png",
+    "48": "rocket.png",
+    "128": "rocket.png"
   },
   "options_page": "options.html",
-  "permissions": ["storage", "activeTab"],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  "permissions": ["storage", "activeTab", "identity", "identity.email", "notifications"],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "devtools_page": "popup.html",
+  "web_accessible_resources": ["popup.html"]
 }
