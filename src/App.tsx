@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 import WebsitesList from './components/WebsitesList';
 import { useChromeSyncStorage } from './hooks/useChromeSyncStorage';
+import { StorageSocketData } from './global';
 
 interface ProductFormElements extends HTMLFormControlsCollection {
   product: HTMLInputElement;
@@ -15,6 +16,7 @@ interface ProductForm extends HTMLFormElement {
 
 function App() {
   const [product, setProduct] = useChromeSyncStorage<string>('product', '');
+  const [socketData, setSocketData] = useState<StorageSocketData[]>();
 
   function sendWebsitesToFlowStarter(e: React.FormEvent<ProductForm>) {
     e.preventDefault();
@@ -22,16 +24,31 @@ function App() {
     setProduct(e.currentTarget.elements.product.value || '');
   }
 
-  chrome.runtime.onMessage.addListener(function (
-    request,
-    sender,
-    sendResponse,
-  ) {
-    if (request.msg === 'socket') {
-      //  To do something
-      console.log('data received: ', request.data);
-    }
-  });
+  const getSocketData = () => {
+    chrome.storage.sync.get(['dataSocket'], (result) => {
+      const dataSocketOnStorage: StorageSocketData[] =
+        result['dataSocket'] || [];
+      setSocketData(dataSocketOnStorage);
+    });
+  };
+
+  useEffect(() => {
+    getSocketData();
+  }, []);
+
+  if (socketData?.length) {
+    return (
+      <ul className="App-header">
+        {socketData.map((data) => (
+          <li key={data.website}>
+            <a className="App-link" href={data.website}>
+              {data.website}
+            </a>
+          </li>
+        ))}
+      </ul>
+    );
+  }
 
   return (
     <div className="App">

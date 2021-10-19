@@ -1,3 +1,3 @@
 export const NOTIFICATION = {
-  STEP_TYPE_ID: 'step_notifier',
+  DEFAULT_ICON: '/rocket.png',
 };
