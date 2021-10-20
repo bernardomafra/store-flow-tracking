@@ -34,7 +34,9 @@ function App() {
   };
 
   chrome.storage.onChanged.addListener(
-    ({ dataSocket: { oldValue, newValue } }) => {
+    ({dataSocket}) => {
+      const oldValue = dataSocket?.oldValue
+      const newValue = dataSocket?.newValue
       if (JSON.stringify(oldValue) !== JSON.stringify(newValue))
         setSocketData(newValue as StorageSocketData[]);
     },
