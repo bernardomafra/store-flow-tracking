@@ -10,7 +10,7 @@
   },
   "background": {
     "scripts": ["socket.io.js", "background.bundle.js"],
-    "persistent": false
+    "persistent": true
   },
   "content_scripts": [
     {

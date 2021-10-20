@@ -5,6 +5,8 @@ import './App.css';
 import WebsitesList from './components/WebsitesList';
 import { useChromeSyncStorage } from './hooks/useChromeSyncStorage';
 import { StorageSocketData } from './global';
+import StepList from './components/StepList';
+import readSyncStorageData from './utils/readSyncStorageData';
 
 interface ProductFormElements extends HTMLFormControlsCollection {
   product: HTMLInputElement;
@@ -24,30 +26,26 @@ function App() {
     setProduct(e.currentTarget.elements.product.value || '');
   }
 
-  const getSocketData = () => {
-    chrome.storage.sync.get(['dataSocket'], (result) => {
-      const dataSocketOnStorage: StorageSocketData[] =
-        result['dataSocket'] || [];
-      setSocketData(dataSocketOnStorage);
-    });
+  const getSocketData = async () => {
+    const dataSocketOnStorage: StorageSocketData[] = (await readSyncStorageData(
+      'dataSocket',
+    )) as StorageSocketData[];
+    setSocketData(dataSocketOnStorage);
   };
+
+  chrome.storage.onChanged.addListener(
+    ({ dataSocket: { oldValue, newValue } }) => {
+      if (JSON.stringify(oldValue) !== JSON.stringify(newValue))
+        setSocketData(newValue as StorageSocketData[]);
+    },
+  );
 
   useEffect(() => {
     getSocketData();
   }, []);
 
   if (socketData?.length) {
-    return (
-      <ul className="App-header">
-        {socketData.map((data) => (
-          <li key={data.website}>
-            <a className="App-link" href={data.website}>
-              {data.website}
-            </a>
-          </li>
-        ))}
-      </ul>
-    );
+    return <StepList data={socketData} />;
   }
 
   return (

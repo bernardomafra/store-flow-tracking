@@ -2,18 +2,26 @@
 import { io } from 'socket.io-client';
 import { StorageSocketData } from '../global';
 import notify from '../utils/notify';
+import readSyncStorageData from './readSyncStorageData';
 
-const readStorage = async (key) => {
-  return new Promise((resolve, reject) => {
-    chrome.storage.sync.get([key], function (result) {
-      if (result[key] === undefined) {
-        reject();
-      } else {
-        resolve(result[key]);
-      }
-    });
-  });
-};
+function hasWebsiteRegisteredOn(
+  socketData: StorageSocketData[],
+  website: string,
+) {
+  return socketData.some((data) => data.website === website);
+}
+
+function getStorageDataToBeUpdated(
+  currentData: StorageSocketData[],
+  newDataToSet: StorageSocketData,
+) {
+  const updatedData = currentData;
+  const indexOfDataToUpdate = currentData.findIndex(
+    (item) => item.website === newDataToSet.website,
+  );
+  updatedData[indexOfDataToUpdate] = newDataToSet;
+  return updatedData;
+}
 
 export default function getIO() {
   chrome.identity.getProfileUserInfo((user) => {
@@ -24,14 +32,18 @@ export default function getIO() {
     });
 
     ioClient.on('ws_sfa::STEP', (data) => {
-      const message = JSON.parse(data);
+      const message: StorageSocketData = JSON.parse(data);
       notify(message.step, message.website);
 
       let socketData: StorageSocketData[] = [message];
       chrome.storage.sync.get(['dataSocket'], async function (result) {
-        const storageData = await readStorage('dataSocket');
+        const storageData: StorageSocketData[] = await readSyncStorageData(
+          'dataSocket',
+        );
         if (result['dataSocket']?.length) {
-          socketData = [...storageData, message];
+          if (hasWebsiteRegisteredOn(storageData, message.website)) {
+            socketData = getStorageDataToBeUpdated(storageData, message);
+          } else socketData = [...storageData, message];
         }
 
         chrome.storage.sync.set({ dataSocket: socketData });
