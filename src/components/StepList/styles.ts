@@ -69,8 +69,20 @@ export const Title = styled.h2`
   justify-content: center;
   color: #7b777e;
   margin-top: 0px;
+  position: relative;
 
   small {
     color: #a1a0a0;
+  }
+
+  small#clear {
+    cursor: pointer;
+    position: absolute;
+
+    color: #00bcf9;
+    text-decoration: underline;
+
+    top: 0px;
+    right: 10px;
   }
 `;

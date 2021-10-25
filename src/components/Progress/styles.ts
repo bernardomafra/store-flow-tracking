@@ -17,6 +17,7 @@ export const Container = styled.div`
     background-color: #00bcf9;
     border-bottom-left-radius: 8px;
     text-align: right;
+    transition: width 1s;
   }
 
   span {

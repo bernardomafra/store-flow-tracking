@@ -8,9 +8,16 @@ interface StepListProps {
 }
 
 export default function StepList({ data }: StepListProps) {
+  function clear() {
+    chrome.storage.sync.set({ dataSocket: [] });
+  }
+
   return (
     <Container>
       <Title>
+        <small id="clear" onClick={clear}>
+          Limpar
+        </small>
         STEPS <small>Acompanhe as suas buscas em tempo real</small>
       </Title>
       {data.map((data) => (
