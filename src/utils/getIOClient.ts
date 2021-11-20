@@ -36,18 +36,15 @@ export default function getIO() {
       notify(message.step, message.website);
 
       let socketData: StorageSocketData[] = [message];
-      chrome.storage.sync.get(['dataSocket'], async function (result) {
-        const storageData: StorageSocketData[] = await readSyncStorageData(
-          'dataSocket',
-        );
-        if (result['dataSocket']?.length) {
-          if (hasWebsiteRegisteredOn(storageData, message.website)) {
-            socketData = getStorageDataToBeUpdated(storageData, message);
-          } else socketData = [...storageData, message];
-        }
-
-        chrome.storage.sync.set({ dataSocket: socketData });
-      });
+      const storageData: StorageSocketData[] = await readSyncStorageData(
+        'dataSocket',
+      );
+      if (result['dataSocket']?.length) {
+        if (hasWebsiteRegisteredOn(storageData, message.website)) {
+          socketData = getStorageDataToBeUpdated(storageData, message);
+        } else socketData = [...storageData, message];
+      }
+      chrome.storage.sync.set({ dataSocket: socketData });
     });
   });
 }

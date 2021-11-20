@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "short_name": "React App",
   "name": "Store Flow Tracking",
-  "description": "Sample application showing how to create an extension with Create React App",
+  "description": "Interface responsável por acompanhar o fluxo de ação nos websites mostrando seu progresso e etapa.",
   "browser_action": {
     "default_title": "Smart Flow Tracking",
     "default_popup": "popup.html"
