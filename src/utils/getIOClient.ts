@@ -31,7 +31,7 @@ export default function getIO() {
       },
     });
 
-    ioClient.on('ws_sfa::STEP', (data) => {
+    ioClient.on('ws_sfa::STEP', async (data) => {
       const message: StorageSocketData = JSON.parse(data);
       notify(message.step, message.website);
 

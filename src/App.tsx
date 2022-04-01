@@ -27,20 +27,21 @@ function App() {
   }
 
   const getSocketData = async () => {
-    const dataSocketOnStorage: StorageSocketData[] = (await readSyncStorageData(
-      'dataSocket',
-    )) as StorageSocketData[];
-    setSocketData(dataSocketOnStorage);
+    try {
+      const dataSocketOnStorage: StorageSocketData[] =
+        (await readSyncStorageData('dataSocket')) as StorageSocketData[];
+      setSocketData(dataSocketOnStorage);
+    } catch (error) {
+      setSocketData(undefined);
+    }
   };
 
-  chrome.storage.onChanged.addListener(
-    ({dataSocket}) => {
-      const oldValue = dataSocket?.oldValue
-      const newValue = dataSocket?.newValue
-      if (JSON.stringify(oldValue) !== JSON.stringify(newValue))
-        setSocketData(newValue as StorageSocketData[]);
-    },
-  );
+  chrome.storage.onChanged.addListener(({ dataSocket }) => {
+    const oldValue = dataSocket?.oldValue;
+    const newValue = dataSocket?.newValue;
+    if (JSON.stringify(oldValue) !== JSON.stringify(newValue))
+      setSocketData(newValue as StorageSocketData[]);
+  });
 
   useEffect(() => {
     getSocketData();
