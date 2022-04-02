@@ -1,5 +1,4 @@
 // @ts-nocheck
-import { io } from 'socket.io-client';
 import { StorageSocketData } from '../global';
 import notify from '../utils/notify';
 import readSyncStorageData from './readSyncStorageData';
@@ -25,26 +24,46 @@ function getStorageDataToBeUpdated(
 
 export default function getIO() {
   chrome.identity.getProfileUserInfo((user) => {
-    const ioClient = io('http://localhost:3030', {
-      query: {
+    const socket = new WebSocket('ws://localhost:3000');
+
+    socket.addEventListener('open', function (event) {
+      console.log('Connection established');
+      socket.send(JSON.stringify({ user }));
+      const query = {
+        type: 'new-user',
         userId: user.id || '',
-      },
-    });
+      };
 
-    ioClient.on('ws_sfa::STEP', async (data) => {
-      const message: StorageSocketData = JSON.parse(data);
-      notify(message.step, message.website);
+      socket.send(JSON.stringify(query));
 
-      let socketData: StorageSocketData[] = [message];
-      const storageData: StorageSocketData[] = await readSyncStorageData(
-        'dataSocket',
-      );
-      if (result['dataSocket']?.length) {
-        if (hasWebsiteRegisteredOn(storageData, message.website)) {
-          socketData = getStorageDataToBeUpdated(storageData, message);
-        } else socketData = [...storageData, message];
-      }
-      chrome.storage.sync.set({ dataSocket: socketData });
+      socket.addEventListener('message', async function (event) {
+        console.log(event);
+        console.log('Message from server ', event.data);
+
+        try {
+          const message = JSON.parse(event.data);
+          console.log('message: ', message);
+          if (message.type === 'new-step') {
+            console.log('is new step', message.step);
+            notify(message.step, message.website);
+
+            let socketData: StorageSocketData[] = [message];
+            const storageData: StorageSocketData[] = await readSyncStorageData(
+              'dataSocket',
+            );
+            if (storageData?.length) {
+              if (hasWebsiteRegisteredOn(storageData, message.website)) {
+                socketData = getStorageDataToBeUpdated(storageData, message);
+              } else socketData = [...storageData, message];
+            }
+            chrome.storage.sync.set({ dataSocket: socketData });
+            const updated = await readSyncStorageData('dataSocket');
+            console.log('dataSocket: ', updated);
+          }
+        } catch (newStepError) {
+          console.error('error: ', newStepError);
+        }
+      });
     });
   });
 }

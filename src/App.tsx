@@ -29,7 +29,9 @@ function App() {
   const getSocketData = async () => {
     try {
       const dataSocketOnStorage: StorageSocketData[] =
-        (await readSyncStorageData('dataSocket')) as StorageSocketData[];
+        (await readSyncStorageData(
+          'dataSocket',
+        )) as unknown as StorageSocketData[];
       setSocketData(dataSocketOnStorage);
     } catch (error) {
       setSocketData(undefined);
