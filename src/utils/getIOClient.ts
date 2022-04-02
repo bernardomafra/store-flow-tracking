@@ -24,7 +24,7 @@ function getStorageDataToBeUpdated(
 
 export default function getIO() {
   chrome.identity.getProfileUserInfo((user) => {
-    const socket = new WebSocket('ws://localhost:3000');
+    const socket = new WebSocket('ws://store-flow-notifier.herokuapp.com');
 
     socket.addEventListener('open', function (event) {
       console.log('Connection established');
