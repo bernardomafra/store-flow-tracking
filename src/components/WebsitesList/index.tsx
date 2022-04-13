@@ -1,47 +1,56 @@
-import React, { useCallback, useEffect } from 'react';
-import { useFiles } from '../../context/files';
+import { useEffect } from 'react';
 import { useChromeSyncStorage } from '../../hooks/useChromeSyncStorage';
-import { getFileTextContentArray, isFileTextContentValid } from './utils';
+import { WebsiteCard } from '../WebsiteCard';
+import { Container, Title } from './styles';
 
-interface WebsitesListProps {
-  fallbackComponent: React.ReactElement;
+interface Website {
+  id: string;
+  url: string;
 }
 
-export default function WebsitesList(props: WebsitesListProps) {
-  const { fileTextContent, deleteFile } = useFiles();
-  const [websites, setWebsites] = useChromeSyncStorage<string[]>(
+interface Flow {
+  _id: {
+    $oid: string;
+  };
+  website: string;
+  enabled?: boolean;
+  status?: string;
+}
+
+export default function WebsitesList() {
+  const [websites, setWebsites] = useChromeSyncStorage<Website[]>(
     'websites',
     [],
   );
 
-  const handleFileDelete = useCallback(() => {
-    setTimeout(deleteFile, 0);
-    setWebsites([]);
-  }, [deleteFile, setWebsites]);
+  const getWebsitesArrayFromText = async () => {
+    const response = await fetch(
+      'https://store-flow-action.herokuapp.com/flows',
+    );
+    const flows = await response.json();
+    console.log(flows);
 
-  const getWebsitesArrayFromText = () => {
-    if (isFileTextContentValid(fileTextContent))
-      setWebsites(getFileTextContentArray(fileTextContent));
-    else if (!websites) handleFileDelete();
+    const data = flows.map((flow: Flow) => ({
+      id: flow._id.$oid,
+      url: flow.website,
+    }));
+    console.log(flows);
+    setWebsites(data);
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => getWebsitesArrayFromText(), [fileTextContent]);
+  useEffect(() => {
+    getWebsitesArrayFromText();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  if (!websites?.length)
-    return props.fallbackComponent || <i>Nenhum website cadastrado</i>;
+  if (!websites?.length) return <i>Nenhum website cadastrado</i>;
 
   return (
-    <>
+    <Container>
+      <Title>Websites Registrados</Title>
       {websites.map((website) => (
-        <React.Fragment key={website}>
-          <a target="_blank" href={website} rel="noreferrer">
-            {website}
-          </a>
-          <br />
-        </React.Fragment>
+        <WebsiteCard key={website.id} id={website.id} url={website.url} />
       ))}
-      <button onClick={handleFileDelete}>delete</button>
-    </>
+    </Container>
   );
 }

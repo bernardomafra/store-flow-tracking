@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+html, body {
+  height: 100%;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -49,11 +53,15 @@ form {
 form input {
   border-radius: 4px;
   padding: 10px;
+  outline: none;
+  border: none;
 }
 
 form input,
 section#product,
 b {
+  font-size: 16px;
+  font-weight: bolder;
   margin-top: 10px;
 }
 
@@ -63,5 +71,20 @@ section#product {
 }
 
 section#product b {
+  color: rgb(0, 0, 0);
   text-transform: uppercase;
+}
+
+button {
+  padding: 12px;
+  border-radius: 4px;
+  width: 50%;
+  align-self: center;
+  margin-top: 20px;
+  border: none;
+  outline: none;
+  color: #000;
+  background-color: rgb(235, 235, 137);
+  font-weight: bold;
+  cursor: pointer;
 }

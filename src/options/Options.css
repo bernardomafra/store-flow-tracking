@@ -1,5 +1,6 @@
-body {
+body, div#options{
   margin: 0;
+  height: 100%;
 }
 
 .App {

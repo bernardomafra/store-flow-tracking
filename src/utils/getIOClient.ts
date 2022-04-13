@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { StorageSocketData } from '../global';
-import notify from '../utils/notify';
+import { notify } from '../utils/notify';
 import readSyncStorageData from './readSyncStorageData';
 
 function hasWebsiteRegisteredOn(
@@ -24,7 +24,8 @@ function getStorageDataToBeUpdated(
 
 export default function getIO() {
   chrome.identity.getProfileUserInfo((user) => {
-    const socket = new WebSocket('ws://store-flow-notifier.herokuapp.com');
+    // const socket = new WebSocket('ws://store-flow-notifier.herokuapp.com');
+    const socket = new WebSocket('ws://localhost:3000');
 
     socket.addEventListener('open', function (event) {
       console.log('Connection established');
