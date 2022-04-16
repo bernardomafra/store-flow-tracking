@@ -64,25 +64,21 @@ export const Container = styled.ul`
 
 export const Title = styled.h2`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   color: #7b777e;
+  width: 100%;
   margin-top: 0px;
-  position: relative;
 
   small {
     color: #a1a0a0;
   }
 
-  small#clear {
+  small {
     cursor: pointer;
-    position: absolute;
 
     color: #00bcf9;
     text-decoration: underline;
-
-    top: 0px;
-    right: 10px;
   }
 `;

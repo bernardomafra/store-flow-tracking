@@ -7,26 +7,34 @@ import { hasWebsiteRegisteredOn } from '../utils/hasWebsiteRegisteredOn';
 import { notify } from '../utils/notify';
 import readSyncStorageData from '../utils/readSyncStorageData';
 
-const socket = io('http://localhost:5509/user', { transports: ['websocket'] });
+const socket = io('https://store-flow-notifier.herokuapp.com/user', {
+  transports: ['websocket'],
+});
+
+// const socket = io('http://localhost:5509/user', {
+//   transports: ['websocket'],
+// });
 
 socket.on('error', (error) => {
-  notify('error', error, '');
+  notify('error', error.toString(), '');
 });
 
 socket.on('connect', async () => {
   try {
     const { id } = await getUserProfile();
     socket.emit('new-user', id);
-  } catch (err) {
+  } catch (err: any) {
+    notify('error at connecting', err?.message || '', '');
     console.log(err);
   }
 });
 
 socket.on('step', async (data) => {
+  notify('info', data.toString(), '');
   console.log('Message from server ', data);
 
   try {
-    const message = JSON.parse(data);
+    const message = typeof data === 'string' ? JSON.parse(data) : data;
     notify(message.step, message.website, '');
 
     let socketData: StorageSocketData[] = [message];
@@ -48,7 +56,7 @@ socket.on('step', async (data) => {
 
 socket.on('disconnect', async () => {
   try {
-    notify('disconnected', messageTypes.CONNECTION_CHANGE, '');
+    notify(`${socket.id} disconnected`, messageTypes.CONNECTION_CHANGE, '');
   } catch (err) {}
 });
 

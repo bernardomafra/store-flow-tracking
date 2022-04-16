@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useChromeSyncStorage } from '../../hooks/useChromeSyncStorage';
-import { notify } from '../../utils/notify';
+import { startFlow } from '../../utils/startFlow';
 
 interface ProductFormElements extends HTMLFormControlsCollection {
   product: HTMLInputElement;
@@ -20,26 +20,6 @@ export function Product() {
     setProduct(e.currentTarget.elements.product.value || '');
   }
 
-  async function startFlow() {
-    fetch('https://store-flow-action.herokuapp.com/search', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        product,
-      }),
-    })
-      .then((response) => {
-        console.log('search response: ', response);
-      })
-      .catch((error) => {
-        console.log('search error: ', error);
-      });
-
-    notify('Iniciando fluxo', `Product escolhido: ${product}`, '');
-  }
-
   function deleteProductInStorage() {
     setProduct('');
     setRefresh(!refresh);
@@ -49,7 +29,7 @@ export function Product() {
     <section id="product">
       Produto Escolhido:&nbsp;<b>{product}</b>
       <button onClick={deleteProductInStorage}>Alterar Produto</button>
-      <button onClick={startFlow}>Iniciar</button>
+      <button onClick={() => startFlow(product)}>Iniciar</button>
     </section>
   ) : (
     <form onSubmit={saveProduct}>

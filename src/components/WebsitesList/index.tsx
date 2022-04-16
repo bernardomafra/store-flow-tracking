@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useChromeSyncStorage } from '../../hooks/useChromeSyncStorage';
+import { useEffect, useState } from 'react';
 import { WebsiteCard } from '../WebsiteCard';
 import { Container, Title } from './styles';
 
@@ -18,10 +17,7 @@ interface Flow {
 }
 
 export default function WebsitesList() {
-  const [websites, setWebsites] = useChromeSyncStorage<Website[]>(
-    'websites',
-    [],
-  );
+  const [websites, setWebsites] = useState<Website[]>([]);
 
   const getWebsitesArrayFromText = async () => {
     const response = await fetch(
