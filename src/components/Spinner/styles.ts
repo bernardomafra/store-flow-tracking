@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 export const StyledSpinner = styled.svg`
   animation: rotate 2s linear infinite;
-  width: 40px;
-  height: 40px;
+  width: ${(props) => `${props?.width}`};
+  height: ${(props) => `${props?.height}`};
 
   & .path {
     stroke: #00bcf9;

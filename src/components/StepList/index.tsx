@@ -6,7 +6,7 @@ import { startFlow } from '../../utils/startFlow';
 import ProgressBar from '../Progress';
 import Spinner from '../Spinner';
 
-import { Container, Title } from './styles';
+import { Container, Step, Title } from './styles';
 
 interface StepListProps {
   data: StorageSocketData[];
@@ -48,9 +48,11 @@ export default function StepList({ data }: StepListProps) {
             <img src="/rocket.png" alt="website-running-state" />
             <div>
               <a rel="noreferrer" target="_blank" href={data.url}>
-                Ir para o site
+                {data.website}
               </a>
-              <span>{data.step}</span>
+              <Step hasError={data.step.toLowerCase().includes('error')}>
+                {data.step}
+              </Step>
             </div>
           </section>
           <ProgressBar percentage={data.percentage || 0} />

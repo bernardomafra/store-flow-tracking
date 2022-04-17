@@ -26,6 +26,12 @@ socket.on('error', (error) => {
 socket.on('connect', async () => {
   try {
     const { id } = await getUserProfile();
+    if (!id)
+      return notify(
+        'Sincronização necessária',
+        'Ative a sincronização da conta',
+        '',
+      );
     socket.emit('new-user', id);
     sendChromeMessage({
       type: messageTypes.CONNECTION_CHANGE,
@@ -38,7 +44,6 @@ socket.on('connect', async () => {
 });
 
 socket.on('step', async (data) => {
-  notify('info', data.toString(), '');
   console.log('Message from server ', data);
 
   try {

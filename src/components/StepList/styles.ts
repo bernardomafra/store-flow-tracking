@@ -37,13 +37,6 @@ export const Container = styled.ul`
         a {
           font-size: 14px;
         }
-
-        span {
-          font-size: 14px;
-          margin-top: 5px;
-          color: yellow;
-          font-weight: 500;
-        }
       }
 
       img {
@@ -83,4 +76,15 @@ export const Title = styled.h2`
     color: #00bcf9;
     text-decoration: underline;
   }
+`;
+
+interface StepSpanProps {
+  hasError: boolean;
+}
+
+export const Step = styled.span<StepSpanProps>`
+  font-size: 14px;
+  margin-top: 5px;
+  color: ${(props) => (props.hasError ? 'red' : 'yellow')};
+  font-weight: 500;
 `;

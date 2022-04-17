@@ -1,7 +1,15 @@
 import { StyledSpinner } from './styles';
 
-const Spinner = ({ active }: { active: boolean }) => (
-  <StyledSpinner viewBox="0 0 50 50">
+const Spinner = ({
+  active,
+  width = '40px',
+  height = '40px',
+}: {
+  active: boolean;
+  width?: string;
+  height?: string;
+}) => (
+  <StyledSpinner viewBox="0 0 50 50" width={width} height={height}>
     {active && (
       <circle
         className="path"

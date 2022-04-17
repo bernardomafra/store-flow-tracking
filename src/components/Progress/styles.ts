@@ -7,7 +7,7 @@ export const Container = styled.div`
   background-color: #e0e0de;
   border-radius: 0px 0px 8px 8px;
 
-  > div {
+  > div#progress {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -26,4 +26,17 @@ export const Container = styled.div`
     font-weight: bold;
     margin-left: 10px;
   }
+`;
+
+export const ProgressError = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  height: 100%;
+  width: 100%;
+  background-color: #ff0000;
+  border-bottom-left-radius: 8px;
+  text-align: right;
+  transition: height 1s;
 `;

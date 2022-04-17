@@ -57,10 +57,16 @@ form input {
   border: none;
 }
 
+form label {
+  color: #FFF;
+  font-weight: bold;
+  font-family: 'mono', monospace, 'sans-serif';
+  font-size: 1rem;
+}
+
 form input,
 section#product,
 b {
-  color: #fff;
   font-size: 16px;
   font-weight: bolder;
   margin-top: 10px;
@@ -69,10 +75,13 @@ b {
 section#product {
   display: flex;
   flex-direction: column;
+  padding-bottom: 30px; 
+  color: #fff;
 }
 
 section#product b {
-  text-transform: uppercase;
+  text-transform: uppercase;  
+  color: #fff;
 }
 
 button {
@@ -84,7 +93,15 @@ button {
   border: none;
   outline: none;
   color: #000;
-  background-color: rgb(235, 235, 137);
+  background-color: rgb(214, 214, 214);
   font-weight: bold;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+button:disabled{ 
+  background-color: rgb(153, 153, 153);
+  cursor: not-allowed;
 }
