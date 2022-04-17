@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { messagePayloads, messageTypes } from '../../constants';
 import { WebsiteCard } from '../WebsiteCard';
-import { Container, Title } from './styles';
+import { ConnectionStatus, Container, Title } from './styles';
 
 interface Website {
   id: string;
@@ -18,11 +19,25 @@ interface Flow {
 
 export default function WebsitesList() {
   const [websites, setWebsites] = useState<Website[]>([]);
+  const [connected, setConnected] = useState<boolean>(false);
+  const url = process.env.REACT_APP_STORE_FLOW_ACTION_BASE_URL || '';
+
+  chrome.runtime.onMessage.addListener(
+    //eslint-disable-line no-undef
+    (request, sender, sendResponse) => {
+      console.log(request);
+      switch (request.type) {
+        case messageTypes.CONNECTION_CHANGE:
+          if (request.payload === messagePayloads.CONNECTED) setConnected(true);
+          break;
+        default:
+          break;
+      }
+    },
+  );
 
   const getWebsitesArrayFromText = async () => {
-    const response = await fetch(
-      'https://store-flow-action.herokuapp.com/flows',
-    );
+    const response = await fetch(url.concat('/flows'));
     const flows = await response.json();
     console.log(flows);
 
@@ -44,6 +59,9 @@ export default function WebsitesList() {
   return (
     <Container>
       <Title>Websites Registrados</Title>
+      {connected && <ConnectionStatus>conectado</ConnectionStatus>}
+      <br />
+
       {websites.map((website) => (
         <WebsiteCard key={website.id} id={website.id} url={website.url} />
       ))}

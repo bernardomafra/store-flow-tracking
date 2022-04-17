@@ -1,13 +1,17 @@
 import io from 'socket.io-client';
-import { messageTypes } from '../constants';
+import { messagePayloads, messageTypes } from '../constants';
 import { StorageSocketData } from '../global';
 import { getStorageDataToBeUpdated } from '../utils/getStorageDataToBeUpdated';
 import getUserProfile from '../utils/getUserProfile';
 import { hasWebsiteRegisteredOn } from '../utils/hasWebsiteRegisteredOn';
 import { notify } from '../utils/notify';
 import readSyncStorageData from '../utils/readSyncStorageData';
+import sendChromeMessage from '../utils/sendChromeMessage';
 
-const socket = io('https://store-flow-notifier.herokuapp.com/user', {
+// const url = process.env.REACT_APP_STORE_FLOW_NOTIFIER_BASE_URL || '';
+const url = 'https://store-flow-notifier.herokuapp.com';
+
+const socket = io(url.concat('/user'), {
   transports: ['websocket'],
 });
 
@@ -23,6 +27,10 @@ socket.on('connect', async () => {
   try {
     const { id } = await getUserProfile();
     socket.emit('new-user', id);
+    sendChromeMessage({
+      type: messageTypes.CONNECTION_CHANGE,
+      payload: messagePayloads.CONNECTED,
+    });
   } catch (err: any) {
     notify('error at connecting', err?.message || '', '');
     console.log(err);
@@ -41,6 +49,7 @@ socket.on('step', async (data) => {
     const storageData: StorageSocketData[] = await readSyncStorageData(
       'dataSocket',
     );
+
     if (storageData?.length) {
       if (hasWebsiteRegisteredOn(storageData, message.website)) {
         socketData = getStorageDataToBeUpdated(storageData, message);

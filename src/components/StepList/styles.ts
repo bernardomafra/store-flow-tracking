@@ -28,6 +28,7 @@ export const Container = styled.ul`
       padding: 2vw;
       position: relative;
       div {
+        margin-left: 10px;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -46,13 +47,14 @@ export const Container = styled.ul`
       }
 
       img {
+        position: absolute;
+        left: 12px;
         border-radius: 50%;
         border: 1px solid white;
         background-color: white;
         padding: 5px;
-        width: 20px;
-        height: 20px;
-        margin-right: 10px;
+        width: 15px;
+        height: 15px;
       }
 
       a {

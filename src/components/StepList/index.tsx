@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { StorageSocketData } from '../../global';
 import { useChromeSyncStorage } from '../../hooks/useChromeSyncStorage';
 import { notify } from '../../utils/notify';
 import { startFlow } from '../../utils/startFlow';
 import ProgressBar from '../Progress';
+import Spinner from '../Spinner';
 
 import { Container, Title } from './styles';
 
@@ -12,6 +14,7 @@ interface StepListProps {
 
 export default function StepList({ data }: StepListProps) {
   const [product] = useChromeSyncStorage<string>('product', '');
+  const [activeWebsite] = useState<string>('');
 
   function clear() {
     chrome.storage.sync.set({ dataSocket: [] });
@@ -20,6 +23,10 @@ export default function StepList({ data }: StepListProps) {
   function reset() {
     if (!product) return notify('Não existe produto selecionado', 'error', '');
     startFlow(product);
+  }
+
+  function isActive(website: string) {
+    return website === activeWebsite;
   }
 
   return (
@@ -37,7 +44,8 @@ export default function StepList({ data }: StepListProps) {
       {data.map((data) => (
         <li key={data.website}>
           <section id="data">
-            <img src="/rocket.png" alt="R" />
+            <Spinner active={isActive(data.website)} />
+            <img src="/rocket.png" alt="website-running-state" />
             <div>
               <a rel="noreferrer" target="_blank" href={data.url}>
                 Ir para o site
