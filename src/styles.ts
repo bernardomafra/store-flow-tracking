@@ -7,6 +7,8 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   min-width: 300px;
-  min-height: 300px;
-  overflow: hidden;
+  min-height: 200px;
+  max-height: 300px;
+  overflow-y: overlay;
+  background-color: #f5f5f5;
 `;
