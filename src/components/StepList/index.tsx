@@ -46,13 +46,18 @@ export default function StepList({ data }: StepListProps) {
           <section id="data">
             <Spinner active={isActive(data.website)} />
             <img src="/rocket.png" alt="website-running-state" />
-            <div>
-              <a rel="noreferrer" target="_blank" href={data.url}>
-                {data.website}
-              </a>
+            <div className="limited-text">
               <Step hasError={data.step.toLowerCase().includes('error')}>
                 {data.step}
               </Step>
+              <a
+                className="limited-text"
+                rel="noreferrer"
+                target="_blank"
+                href={data.url}
+              >
+                {data.title}
+              </a>
             </div>
           </section>
           <ProgressBar percentage={data.percentage || 0} />

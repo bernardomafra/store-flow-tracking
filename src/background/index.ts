@@ -8,16 +8,11 @@ import { notify } from '../utils/notify';
 import readSyncStorageData from '../utils/readSyncStorageData';
 import sendChromeMessage from '../utils/sendChromeMessage';
 
-// const url = process.env.REACT_APP_STORE_FLOW_NOTIFIER_BASE_URL || '';
-const url = 'https://store-flow-notifier.herokuapp.com';
+const url = process.env.REACT_APP_STORE_FLOW_NOTIFIER_BASE_URL || '';
 
 const socket = io(url.concat('/user'), {
   transports: ['websocket'],
 });
-
-// const socket = io('http://localhost:5509/user', {
-//   transports: ['websocket'],
-// });
 
 socket.on('error', (error) => {
   notify('error', error.toString(), '');

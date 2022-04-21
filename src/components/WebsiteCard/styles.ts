@@ -15,7 +15,7 @@ export const Container = styled.div`
 
   @media (max-width: 768px) {
     font-size: 0.9rem;
-    min-width: 250px;
+    min-width: 350px;
     padding: 10px;
     a {
       color: #000;

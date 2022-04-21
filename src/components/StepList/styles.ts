@@ -7,9 +7,10 @@ export const Container = styled.ul`
   justify-content: space-between;
   padding: 20px 10px;
   margin: 0px;
+  min-width: 350px;
 
   li {
-    width: 300px;
+    width: 100%;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -27,12 +28,15 @@ export const Container = styled.ul`
       border-radius: 8px 8px 0px 0px;
       padding: 2vw;
       position: relative;
+      width: 100%;
+
       div {
         margin-left: 10px;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         justify-content: center;
+        max-width: 80%;
 
         a {
           font-size: 14px;
