@@ -8,9 +8,11 @@ import { notify } from '../utils/notify';
 import readSyncStorageData from '../utils/readSyncStorageData';
 import sendChromeMessage from '../utils/sendChromeMessage';
 
-const url = process.env.REACT_APP_STORE_FLOW_NOTIFIER_BASE_URL || '';
+const url = (process.env.REACT_APP_STORE_FLOW_NOTIFIER_BASE_URL || '').concat(
+  '/user',
+);
 
-const socket = io(url.concat('/user'), {
+const socket = io(url, {
   transports: ['websocket'],
 });
 
@@ -21,12 +23,15 @@ socket.on('error', (error) => {
 socket.on('connect', async () => {
   try {
     const { id } = await getUserProfile();
-    if (!id)
+    if (!id) {
+      console.log('No user id found');
       return notify(
         'Sincronização necessária',
         'Ative a sincronização da conta',
         '',
       );
+    }
+
     socket.emit('new-user', id);
     sendChromeMessage({
       type: messageTypes.CONNECTION_CHANGE,
