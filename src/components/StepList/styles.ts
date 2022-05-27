@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from "styled-components";
 
 export const Container = styled.ul`
   display: flex;
@@ -84,11 +84,22 @@ export const Title = styled.h2`
 
 interface StepSpanProps {
   hasError: boolean;
+  final: boolean;
 }
 
 export const Step = styled.span<StepSpanProps>`
   font-size: 14px;
   margin-top: 5px;
-  color: ${(props) => (props.hasError ? 'red' : 'yellow')};
+  color: yellow;
+  ${(props) =>
+    props.hasError &&
+    css`
+      color: #f00;
+    `}
+  ${(props) =>
+    props.final &&
+    css`
+      color: #0f0;
+    `}
   font-weight: 500;
 `;

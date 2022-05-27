@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext } from "react";
 
 export interface IFile {
   name: string;
@@ -19,9 +19,9 @@ const FileContext = createContext<IFileContextData>({} as IFileContextData);
 
 const FileProvider: React.FC = ({ children }) => {
   const [uploadedFile, setUploadedFile] = useState<IFile | null>(null);
-  const [text, setText] = useState<string>('');
+  const [text, setText] = useState<string>("");
 
-  console.log('FileProvider::rendered');
+  console.log("FileProvider::rendered");
   useEffect(() => {
     return () => {
       uploadedFile && URL.revokeObjectURL(uploadedFile.preview);
@@ -37,7 +37,7 @@ const FileProvider: React.FC = ({ children }) => {
       file,
       name: file.name,
       preview: URL.createObjectURL(file),
-      url: '',
+      url: "",
     };
 
     // concat é mais performático que ...spread
@@ -46,16 +46,17 @@ const FileProvider: React.FC = ({ children }) => {
 
     try {
       const fileData = await fetch(newUploadedFile.preview);
+      console.log(fileData);
       const fileText = await fileData.text();
       setText(fileText);
     } catch {
-      setText('');
+      setText("");
     }
   };
 
   const deleteFile = () => {
     setUploadedFile(null);
-    setText('');
+    setText("");
   };
 
   return (
@@ -77,7 +78,7 @@ function useFiles(): IFileContextData {
   const context = useContext(FileContext);
 
   if (!context) {
-    throw new Error('useFiles must be used within FileProvider');
+    throw new Error("useFiles must be used within FileProvider");
   }
 
   return context;

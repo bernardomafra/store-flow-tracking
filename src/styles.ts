@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Container = styled.div`
   height: 100%;
@@ -7,8 +7,8 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   min-width: 300px;
-  min-height: 200px;
-  max-height: 300px;
+  min-height: 300px;
+  max-height: 500px;
   overflow-y: overlay;
   background-color: #f5f5f5;
 `;

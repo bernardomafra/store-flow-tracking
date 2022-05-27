@@ -76,12 +76,25 @@ section#product {
   display: flex;
   flex-direction: column;
   padding-bottom: 30px; 
-  color: #fff;
+  color: green;
+  width: 100%;
 }
 
 section#product b {
   text-transform: uppercase;  
-  color: #fff;
+  color: green;
+}
+
+section#product div#buttons-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+}
+
+section#product div#buttons-group button:nth-child(1){
+  margin-right: 10px;
 }
 
 button {

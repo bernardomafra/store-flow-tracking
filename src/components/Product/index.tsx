@@ -1,61 +1,60 @@
-import { useState } from 'react';
-import { useChromeSyncStorage } from '../../hooks/useChromeSyncStorage';
-import { notify } from '../../utils/notify';
-import { startFlow } from '../../utils/startFlow';
-import Spinner from '../Spinner';
-
-interface ProductFormElements extends HTMLFormControlsCollection {
-  product: HTMLInputElement;
-}
-
-interface ProductForm extends HTMLFormElement {
-  readonly elements: ProductFormElements;
-}
+import { useEffect, useState } from "react";
+import { useChromeSyncStorage } from "../../hooks/useChromeSyncStorage";
+import { notify } from "../../utils/notify";
+import readSyncStorageData from "../../utils/readSyncStorageData";
+import { IStartFlowData, startFlow } from "../../utils/startFlow";
+import Spinner from "../Spinner";
 
 export function Product() {
-  const [product, setProduct] = useChromeSyncStorage<string>('product', '');
-  const [refresh, setRefresh] = useState(false);
+  const [flowData, setFlowData] = useChromeSyncStorage<IStartFlowData | null>(
+    "flowData",
+    null,
+  );
+
+  console.log("here");
+  console.log(flowData);
   const [loading, setLoading] = useState(false);
 
-  function saveProduct(e: React.FormEvent<ProductForm>) {
-    e.preventDefault();
-    e.stopPropagation();
-    setProduct(e.currentTarget.elements.product.value || '');
-  }
-
-  function deleteProductInStorage() {
-    setProduct('');
-    setRefresh(!refresh);
-  }
+  useEffect(() => {
+    chrome.storage.sync.get(["flowData"], (result) => {
+      console.log(result);
+      setFlowData(result.flowData);
+    });
+  }, []);
 
   async function start() {
-    if (product) {
+    if (flowData?.product) {
       try {
-        await startFlow(product);
+        const flowData = await readSyncStorageData("flowData");
+        await startFlow(flowData);
         setLoading(true);
-        notify('Iniciando fluxo', `Product escolhido: ${product}`, '');
+        notify("Iniciando fluxo", `Product escolhido: ${flowData.product}`, "");
       } catch (error) {
-        notify(`Error starting flow for ${product}`, '', '');
+        notify(`Error starting flow for ${flowData.product}`, "", "");
       }
     }
   }
 
-  return product ? (
+  return flowData?.product ? (
     <section id="product">
-      Produto Escolhido:&nbsp;<b>{product}</b>
-      {!loading && (
-        <button onClick={deleteProductInStorage}>Alterar Produto</button>
-      )}
-      <button disabled={loading} onClick={start}>
-        {loading && <Spinner active width="25px" height="25px" />}
-        {loading ? 'Iniciando...' : 'Iniciar'}
-      </button>
+      Produto Escolhido:&nbsp;<b>{flowData.product}</b>
+      <div id="buttons-group">
+        {!loading && (
+          <button onClick={() => chrome.runtime.openOptionsPage()}>
+            Alterar Produto
+          </button>
+        )}
+        <button disabled={loading} onClick={start}>
+          {loading && <Spinner active width="25px" height="25px" />}
+          {loading ? "Iniciando..." : "Iniciar"}
+        </button>
+      </div>
     </section>
   ) : (
-    <form onSubmit={saveProduct}>
-      <label htmlFor="product">Produto a ser buscado: </label>
-      <input id="product" type="text" name="product"></input>
-      <button type="submit">Salvar produto</button>
-    </form>
+    <>
+      <button onClick={() => chrome.runtime.openOptionsPage()}>
+        Buscar um Produto
+      </button>
+    </>
   );
 }

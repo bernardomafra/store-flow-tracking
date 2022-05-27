@@ -1,11 +1,30 @@
 body, div#options{
   margin: 0;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .App {
   text-align: center;
 }
+
+div#container input {
+  width: 70vw;  
+}
+
+div#container label {
+  align-self: flex-start;
+  margin-top: 10px;
+}
+
+div#container button {
+  width: 100%;  
+  background-color: rgb(20, 144, 233);
+  color: white;
+}
+
 
 .App-logo {
   height: 40vmin;

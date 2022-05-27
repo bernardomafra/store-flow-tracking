@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
 
-import { StorageSocketData } from './global';
-import StepList from './components/StepList';
-import readSyncStorageData from './utils/readSyncStorageData';
-import Options from './options/Options';
-import { Product } from './components/Product';
+import { StorageSocketData } from "./global";
+import StepList from "./components/StepList";
+import readSyncStorageData from "./utils/readSyncStorageData";
+import Options from "./options/Options";
+import { Product } from "./components/Product";
+import WebsitesList from "./components/WebsitesList";
+import { Container } from "./styles";
+import GlobalStyle from "./styles/global";
 
 function App() {
   const [socketData, setSocketData] = useState<StorageSocketData[]>();
@@ -14,7 +17,7 @@ function App() {
     try {
       const dataSocketOnStorage: StorageSocketData[] =
         (await readSyncStorageData(
-          'dataSocket',
+          "dataSocket",
         )) as unknown as StorageSocketData[];
       setSocketData(dataSocketOnStorage);
     } catch (error) {
@@ -39,8 +42,11 @@ function App() {
 
   return (
     <div className="App">
-      <Options />
-      <Product />
+      <Container>
+        <GlobalStyle />
+        <WebsitesList />
+        <Product />
+      </Container>
     </div>
   );
 }

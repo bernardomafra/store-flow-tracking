@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 export const useChromeSyncStorage = <T>(
   key: string,
@@ -14,17 +14,22 @@ export const useChromeSyncStorage = <T>(
   };
 
   const getChromeStorageValue = () => {
-    const localStorageItem = localStorage.getItem(LOCALSTORAGE_KEY);
-    if (localStorageItem) return JSON.parse(localStorageItem);
+    try {
+      const localStorageItem = localStorage.getItem(LOCALSTORAGE_KEY);
+      if (localStorageItem) return JSON.parse(localStorageItem);
 
-    chrome.storage.sync.get([key], function (result) {
-      if (result[key] && !value) {
-        localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(value));
-        setValue(value);
-      }
-    });
+      chrome.storage.sync.get([key], function (result) {
+        if (result[key] && !value) {
+          localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(value));
+          setValue(value);
+        }
+      });
 
-    return value;
+      return value;
+    } catch (err) {
+      console.log(err);
+      return {};
+    }
   };
 
   const chromeStorageValue = getChromeStorageValue();
